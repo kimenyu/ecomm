@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% include 'accounts/messaging.html' %}
+  <div class="container my-4">
+    <div class="row">
+      <div class="col-md-8">
+        <h2 class="mb-4">{{ user.username }}</h2>
+
+        <!-- Display the image if it exists -->
+        {% if user.image %}
+          <div class="profile-image">
+            <img src="{{ user.image.url }}" alt="{{ user.username }}'s Profile Image" class="rounded-circle img-fluid">
+          </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'accounts:profile' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" name="first_name" id="first_name" class="form-control" value="{{ user.first_name }}" required>
+          </div>
+          <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" name="last_name" id="last_name" class="form-control" value="{{ user.last_name }}" required>
+          </div>
+          <div class="form-group">
+            <label for="image">Profile Image</label>
+            <input type="file" name="image" id="image" class="form-control-file">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-control" value="{{ user.email }}" required>
+          </div>
+          <div class="form-group">
+            <label for="phone_number">Phone Number</label>
+            <input type="tel" name="phone_number" id="phone_number" class="form-control" value="{{ user.phone_number }}" required>
+          </div>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <textarea name="address" id="address" class="form-control" required>{{ user.address }}</textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <style>
+    .profile-image {
+      width: 150px; /* Adjust the size as needed */
+      height: 150px; /* Adjust the size as needed */
+      overflow: hidden;
+      border-radius: 50%;
+      margin: 0 auto;
+      border: 2px solid #007BFF; /* Add a border */
+    }
+
+    .profile-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+{% endblock %}

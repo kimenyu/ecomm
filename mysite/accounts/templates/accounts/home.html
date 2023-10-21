@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% include 'accounts/messaging.html' %}
+{% block content %}
+    <div class="container">
+        <!-- filter by category -->
+        <form method="get">
+            <select name="category">
+                <option value="">All categories</option>
+                <!-- Categories options go here -->
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+        <br>
+        <!-- end filter by category -->
+
+        <div class="row">
+            <!-- Products loop -->
+            <div class="col-lg-3">
+                <div class="product-box">
+                    <div class="product-inner-box position-relative">
+                        <img src="https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/23/523043/1.jpg?8057" alt="" class="img-fluid">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">
+                            <h4></h4>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a href="" class="btn btn-sm btn-outline-secondary">View</a>
+                                <a href="" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to cart
+                                </a>
+                            </div>
+                            <small class="text-muted"></small>
+                        </div>
+                        <br>
+                        <div class="product-price"> 
+                            <p class="product-stock">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of product loop -->
+        </div>
+    </div>
+{% endblock content %}
