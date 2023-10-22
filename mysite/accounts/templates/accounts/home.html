@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% include 'accounts/messaging.html' %}
+
 {% block content %}
     <div class="container">
         <!-- filter by category -->
@@ -14,36 +15,103 @@
         <br>
         <!-- end filter by category -->
 
-        <div class="row">
+        <div class="row" id="product-list">
             <!-- Products loop -->
+            {% for product in products %}
             <div class="col-lg-3">
                 <div class="product-box">
                     <div class="product-inner-box position-relative">
-                        <img src="https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/23/523043/1.jpg?8057" alt="" class="img-fluid">
+                        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'placeholder.jpg' %}{% endif %}" alt="{{ product.name }}">
                     </div>
                     <div class="product-info">
                         <div class="product-name">
-                            <h4></h4>
+                            <h4>{{ product.name }}</h4>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <a href="" class="btn btn-sm btn-outline-secondary">View</a>
-                                <a href="" class="btn btn-sm btn-outline-secondary">
+                                <a href="{% url 'products:product-detail' product.id %}" class="btn btn-sm btn-outline-secondary">View</a>
                                     <i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to cart
                                 </a>
                             </div>
-                            <small class="text-muted"></small>
+                            <small class="text-muted">{{ product.created_at }}</small>
                         </div>
                         <br>
-                        <div class="product-price"> 
-                            <p class="product-stock">
-                            </p>
+                        <div class="product-price">
+                            <p class="product-stock">In Stock: {{ product.stock }}</p>
+                            <p class="product-price">Price: ${{ product.price }}</p>
                         </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
             <!-- End of product loop -->
         </div>
     </div>
+</div>
+<script>
+    const listProduct = document.querySelector('#product-list');
+
+    async function getProducts() {
+        const res = await fetch('http://127.0.0.1:8000/products/products/');
+        const data = await res.json();
+
+        data.forEach(product => {
+            // Create product element
+            const productElement = document.createElement('div');
+            productElement.className = 'col-lg-3 product-box';
+
+            // Create product image element
+            const imageElement = document.createElement('img');
+            imageElement.src = product.image ? product.image : '/static/placeholder.jpg';
+            imageElement.alt = product.name;
+
+            // Create product name element
+            const nameElement = document.createElement('div');
+            nameElement.className = 'product-name';
+            nameElement.innerHTML = `<h4>${product.name}</h4>`;
+
+            // Create product info element
+            const infoElement = document.createElement('div');
+            infoElement.className = 'product-info';
+
+            // Create buttons for "View" and "Add to cart"
+            const btnGroupElement = document.createElement('div');
+            btnGroupElement.className = 'btn-group';
+
+            // Assuming you have the product ID available in your JavaScript, you can use it like this:
+            const productID = 1; // Replace this with your actual product ID
+
+            // Construct the URL using JavaScript
+            const productURL = `/products/products/${productID}/`;
+
+            btnGroupElement.innerHTML = `
+                <a href="${productURL}" class="btn btn-sm btn-outline-secondary">View</a>
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to cart
+            `;
+
+            // Create product stock and price elements
+            const stockElement = document.createElement('p');
+            stockElement.className = 'product-stock';
+            stockElement.textContent = `In Stock: ${product.stock}`;
+
+            const priceElement = document.createElement('p');
+            priceElement.className = 'product-price';
+            priceElement.textContent = `Price: $${product.price}`;
+
+            // Append elements to product element
+            infoElement.appendChild(nameElement);
+            infoElement.appendChild(btnGroupElement);
+            infoElement.appendChild(stockElement);
+            infoElement.appendChild(priceElement);
+
+            productElement.appendChild(imageElement);
+            productElement.appendChild(infoElement);
+
+            listProduct.appendChild(productElement);
+        });
+    }
+
+    getProducts();
+</script>
 {% endblock content %}

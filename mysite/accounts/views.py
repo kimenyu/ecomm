@@ -21,6 +21,7 @@ from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.contrib import messages
+from products.models import Product
 
 
 # Create your views here.
@@ -28,9 +29,10 @@ from django.contrib.auth.decorators import login_required
 
 
 def homeView(request):
+    products = Product.objects.all()
     if request.user.is_authenticated:
         user = request.user
-        context = {'user': user}
+        context = {'user': user, 'products': products}
     else:
         context = {}
     return render(request, 'accounts/home.html', context)
@@ -246,4 +248,4 @@ def passwordResetConfirm(request, uidb64, token):
 def logoutUser(request):
     logout(request)
     messages.info(request, "Logged out successfully!")
-    return redirect("accounts:home")
+    return redirect("accounts:login")
